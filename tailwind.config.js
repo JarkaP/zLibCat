@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 module.exports = {
     future: {
         purgeLayersByDefault: true,
@@ -5,8 +7,22 @@ module.exports = {
     },
     purge: ['./src/**/*.html', './src/**/*.vue'],
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: {
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+            },
+        },
     },
-    variants: {},
+    variants: {
+        backgroundColor: [
+            'responsive',
+            'first',
+            'last',
+            'even',
+            'odd',
+            'hover',
+            'focus',
+        ],
+    },
     plugins: [],
 }
