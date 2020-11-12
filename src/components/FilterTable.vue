@@ -203,7 +203,7 @@ export default {
             const self = this
             self.loading = true
             axios
-                .get('/data/data.json')
+                .get('./data/data.json')
                 .then(response => {
                     response.data.map(item => {
                         self.items.push({
