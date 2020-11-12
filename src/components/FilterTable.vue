@@ -38,6 +38,41 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <nav
+                    class="inline-flex"
+                    role="navigation"
+                    aria-label="pagination"
+                >
+                    <button
+                        class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+                        :class="{
+                            'cursor-not-allowed opacity-50':
+                                pagination.currentPage <= 1,
+                        }"
+                        aria-label="Předchozí stránka"
+                        @click="pagination.currentPage--"
+                        :disabled="pagination.currentPage <= 1"
+                    >
+                        &laquo;
+                    </button>
+                    <button
+                        class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+                        :class="{
+                            'cursor-not-allowed opacity-50':
+                                pagination.currentPage >= pagesCount,
+                        }"
+                        aria-label="Další stránka"
+                        @click="pagination.currentPage++"
+                        :disabled="pagination.currentPage >= pagesCount"
+                    >
+                        &raquo;
+                    </button>
+                </nav>
+                <span class="ml-3"
+                    >s. {{ pagination.currentPage }}/{{ pagesCount }}</span
+                >
+            </div>
         </div>
         <div v-show="items.length > 0" class="overflow-x-auto">
             <div class="py-2 align-middle inline-block min-w-full">
@@ -60,7 +95,10 @@
                             class="bg-white divide-y divide-gray-300 divide-dashed"
                         >
                             <tr
-                                v-for="item in filteredItems"
+                                v-for="item in filteredItems.slice(
+                                    currentItems.start,
+                                    currentItems.end
+                                )"
                                 :key="item.id"
                                 class="even:bg-gray-100 hover:bg-purple-200"
                             >
@@ -91,6 +129,10 @@
             </div>
         </div>
 
+        <div v-show="items.length > 0" class="my-2">
+            Celkový počet záznamů: {{ items.length }}, zobrazeno:
+            {{ filteredItems.length }}
+        </div>
         <LoadingIndicator v-show="loading" />
         <AlertMessage v-show="error.length > 0" :message="error" />
     </div>
@@ -115,6 +157,10 @@ export default {
             error: [],
             items: [],
             loading: false,
+            pagination: {
+                currentPage: 1,
+                itemsPerPage: 10,
+            },
             searchTerm: '',
             searchTermProxy: '', // proxy for debouncing
         }
@@ -128,6 +174,22 @@ export default {
                     return includes(this.normalize(val), query)
                 })
             })
+        },
+
+        pagesCount: function() {
+            return Math.ceil(
+                this.filteredItems.length / this.pagination.itemsPerPage
+            )
+        },
+
+        currentItems: function() {
+            let firstItem = this.pagination.currentPage - 1
+            firstItem = firstItem * this.pagination.itemsPerPage
+
+            return {
+                start: firstItem,
+                end: firstItem + this.pagination.itemsPerPage,
+            }
         },
     },
     mounted: function() {
@@ -168,6 +230,7 @@ export default {
     },
     watch: {
         searchTermProxy: debounce(function(newVal) {
+            this.pagination.currentPage = 1
             this.searchTerm = newVal
         }, 500),
     },
