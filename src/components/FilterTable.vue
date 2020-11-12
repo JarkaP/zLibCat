@@ -140,7 +140,10 @@
 
 <script>
 import axios from 'axios'
-import { debounce, deburr, includes, some } from 'lodash'
+import debounce from 'lodash/debounce'
+import deburr from 'lodash/deburr'
+import includes from 'lodash/includes'
+import some from 'lodash/some'
 import LoadingIndicator from './LoadingIndicator.vue'
 import AlertMessage from './AlertMessage.vue'
 
