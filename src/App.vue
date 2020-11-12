@@ -1,5 +1,5 @@
 <template>
-    <div id="app" class="h-screen bg-gray-300 flex flex-col">
+    <div id="app" class="min-h-screen bg-gray-300 flex flex-col">
         <header class="bg-white shadow px-4 sm:px-6 lg:px-8">
             <div class="max-w-6xl mx-auto py-6 ">
                 <h1
@@ -9,7 +9,7 @@
                 </h1>
             </div>
         </header>
-        <main class="sm:px-6 lg:px-8 py-6">
+        <main class="px-4 sm:px-6 lg:px-8 py-6">
             <div class="max-w-6xl mx-auto">
                 <FilterTable />
             </div>
